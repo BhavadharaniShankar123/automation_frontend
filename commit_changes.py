@@ -58,7 +58,7 @@ def main(repo_name, base_url, file_name,commit_message):
         else:
             print("Operation canceled. Exiting.")"""
 
-if __name__ == "__main__":
+if __name__== "__main__":
     parser = argparse.ArgumentParser(description="Process repository name, base URL, and file name.")
     parser.add_argument("repo_name", type=str, help="The name of the repository to process")
     parser.add_argument("base_url", type=str, help="The base URL of the repository")
