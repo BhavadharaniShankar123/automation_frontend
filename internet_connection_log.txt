@@ -1,0 +1,66 @@
+2025-01-10 16:55:36 - Starting process for repository: /Users/bhavadharanishankar/Desktop/SUGGESTION_OUTPUT/MortgageApplication at https://github.com/gmsadmin-git
+----------------------------------------
+2025-01-10 16:55:36 - Local repository path: /Users/bhavadharanishankar/Desktop/SUGGESTION_OUTPUT/MortgageApplication
+----------------------------------------
+2025-01-10 16:55:36 - Checking if /Users/bhavadharanishankar/Desktop/SUGGESTION_OUTPUT/MortgageApplication is a valid Git repository.
+----------------------------------------
+2025-01-10 16:55:36 - /Users/bhavadharanishankar/Desktop/SUGGESTION_OUTPUT/MortgageApplication is a valid Git repository.
+----------------------------------------
+2025-01-10 16:55:36 - Creating and switching to new branch: bhava_testing_1
+----------------------------------------
+2025-01-10 16:55:36 - Successfully created and switched to new branch: bhava_testing_1
+----------------------------------------
+2025-01-10 16:55:36 - Pushing branch 'bhava_testing_1' to remote repository.
+----------------------------------------
+2025-01-10 16:55:37 - Branch 'bhava_testing_1' pushed to remote repository successfully.
+----------------------------------------
+2025-01-10 16:57:45 - Starting process for repository: /Users/bhavadharanishankar/Desktop/SUGGESTION_OUTPUT/MortgageApplication at https://github.com/gmsadmin-git
+----------------------------------------
+2025-01-10 16:57:45 - Local repository path: /Users/bhavadharanishankar/Desktop/SUGGESTION_OUTPUT/MortgageApplication
+----------------------------------------
+2025-01-10 16:57:45 - Checking if /Users/bhavadharanishankar/Desktop/SUGGESTION_OUTPUT/MortgageApplication is a valid Git repository.
+----------------------------------------
+2025-01-10 16:57:45 - /Users/bhavadharanishankar/Desktop/SUGGESTION_OUTPUT/MortgageApplication is a valid Git repository.
+----------------------------------------
+2025-01-10 16:57:45 - Creating and switching to new branch: trisha_bhava
+----------------------------------------
+2025-01-10 16:57:45 - Successfully created and switched to new branch: trisha_bhava
+----------------------------------------
+2025-01-10 16:57:45 - Pushing branch 'trisha_bhava' to remote repository.
+----------------------------------------
+2025-01-10 16:57:46 - Branch 'trisha_bhava' pushed to remote repository successfully.
+----------------------------------------
+2025-01-10 17:02:57 - Checked if /Users/bhavadharanishankar/Desktop/SUGGESTION_OUTPUT/MortgageApplication is a Git repository: True
+----------------------------------------
+2025-01-10 17:02:57 - Checked out branch 'remotes/origin/trisha_bhava'.
+----------------------------------------
+2025-01-10 17:25:04 - Starting process for repository: MortgageApplication
+----------------------------------------
+2025-01-10 17:25:04 - Repository MortgageApplication already exists at /Users/bhavadharanishankar/Desktop/test-automation_jan2/MortgageApplication
+----------------------------------------
+2025-01-10 17:25:04 - Searching for file 'bha_3sha' in repository '/Users/bhavadharanishankar/Desktop/test-automation_jan2/MortgageApplication'
+----------------------------------------
+2025-01-10 17:25:04 - File 'bha_3sha' not found in repository '/Users/bhavadharanishankar/Desktop/test-automation_jan2/MortgageApplication'
+----------------------------------------
+2025-01-10 17:25:04 - File bha_3sha not found. Created new file at /Users/bhavadharanishankar/Desktop/test-automation_jan2/bha_3sha
+----------------------------------------
+2025-01-10 17:25:04 - Attempting to open file in VSCode: /Users/bhavadharanishankar/Desktop/test-automation_jan2/bha_3sha
+----------------------------------------
+2025-01-10 17:25:05 - File opened successfully in VSCode: /Users/bhavadharanishankar/Desktop/test-automation_jan2/bha_3sha
+----------------------------------------
+2025-01-10 17:49:38 - Starting process for repository: /Users/bhavadharanishankar/Desktop/SUGGESTION_OUTPUT/MortgageApplication at https://github.com/gmsadmin-git
+----------------------------------------
+2025-01-10 17:49:38 - Local repository path: /Users/bhavadharanishankar/Desktop/SUGGESTION_OUTPUT/MortgageApplication
+----------------------------------------
+2025-01-10 17:49:38 - Checking if /Users/bhavadharanishankar/Desktop/SUGGESTION_OUTPUT/MortgageApplication is a valid Git repository.
+----------------------------------------
+2025-01-10 17:49:38 - /Users/bhavadharanishankar/Desktop/SUGGESTION_OUTPUT/MortgageApplication is a valid Git repository.
+----------------------------------------
+2025-01-10 17:49:38 - Creating and switching to new branch: office
+----------------------------------------
+2025-01-10 17:49:38 - Successfully created and switched to new branch: office
+----------------------------------------
+2025-01-10 17:49:38 - Pushing branch 'office' to remote repository.
+----------------------------------------
+2025-01-10 17:49:39 - Branch 'office' pushed to remote repository successfully.
+----------------------------------------

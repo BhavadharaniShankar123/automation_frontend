@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import axios from 'axios';
-import { exec } from 'child_process';
+import { exec, spawn } from 'child_process';
 import * as path from 'path';
 
 // Logger function
@@ -83,12 +83,18 @@ async function sendApiRequest(query: string, callback: (response: any) => void) 
 
 
 function check_internet(requiredExtensions: string[]) {
- 
+  const workspaceFolders = vscode.workspace.workspaceFolders;
+  if (!workspaceFolders || workspaceFolders.length === 0) {
+    log('No workspace folder is open.');
+    return;
+  }
   const projectFolderPath = path.dirname(__dirname);
+  const activeFolderPath = workspaceFolders[0].uri.fsPath;
+  console.log(activeFolderPath);
   const scriptPath = path.resolve(projectFolderPath, 'check_internet.py');
   
 
-  exec(`python3 ${scriptPath}`, (error, stdout, stderr) => {
+  exec(`python3 ${scriptPath} ${activeFolderPath}`, (error, stdout, stderr) => {
     if (error) {
       log(`Error executing Python script: ${error.message}`);
       return;
@@ -129,10 +135,10 @@ function runInstallExtensionsScript(requiredExtensions: string[]) {
     }
 
     if (stderr) {
-      currentPanel?.webview.postMessage({
-        command: 'apiResponse',
-        text: `\n${stderr}`
-      });
+      // currentPanel?.webview.postMessage({
+      //   command: 'apiResponse',
+      //   text: `\n${stderr}`
+      // });
       log(`Python stderr: ${stderr}`);
       return;
     }
@@ -193,11 +199,13 @@ function runCreateFileScript(repositoryName: string, fileName: string) {
   }
 
   const activeFolderPath = path.join(workspaceFolders[0].uri.fsPath, repositoryName);
+  const folderPath = workspaceFolders[0].uri.fsPath;
   const projectFolderPath = path.dirname(__dirname);
+
   const scriptPath = path.resolve(projectFolderPath, 'create_file.py');
   console.log("three",scriptPath,repositoryName,baseUrlPath,fileName,activeFolderPath)
 
-  exec(`python3 ${scriptPath} ${repositoryName} ${baseUrlPath} ${fileName} ${activeFolderPath}`, (error, stdout, stderr) => {
+  exec(`python3 ${scriptPath} ${repositoryName} ${baseUrlPath} ${fileName} ${activeFolderPath} ${folderPath}`, (error, stdout, stderr) => {
     if (error) {
       log(`Error executing Python script: ${error.message}`);
       return;
@@ -216,7 +224,53 @@ function runCreateFileScript(repositoryName: string, fileName: string) {
     });
   });
 }
+function runPythonScript(repositoryName: string, baseUrl: string) {
+  const workspaceFolders = vscode.workspace.workspaceFolders;
+  if (!workspaceFolders || workspaceFolders.length === 0) {
+    log('No workspace folder is open.');
+    return;
+  }
 
+  const activeFolderPath = workspaceFolders[0].uri.fsPath;
+  const projectFolderPath = path.dirname(__dirname);
+  const scriptPath = path.resolve(projectFolderPath, 'clone.py');
+
+  const pythonProcess = spawn('python3', [scriptPath, repositoryName, baseUrl, activeFolderPath]);
+
+  let outputData = '';
+  let errorData = '';
+
+  // Capture stdout
+  pythonProcess.stdout.on('data', (data) => {
+    outputData += data.toString();
+    console.log('Python Script Stdout:', data.toString());
+  });
+
+  // Capture stderr
+  pythonProcess.stderr.on('data', (data) => {
+    errorData += data.toString();
+    console.error('Python Script Stderr:', data.toString());
+  });
+
+  // Handle process close
+  pythonProcess.on('close', (code) => {
+    if (code === 0) {
+      log(`Python script executed successfully.`);
+      currentPanel?.webview.postMessage({
+        command: 'apiResponse',
+        text: `Repository cloned successfully: ${outputData.trim()}`
+      });
+    } else {
+      log(`Python script failed with exit code ${code}.`);
+      currentPanel?.webview.postMessage({
+        command: 'apiResponse',
+        text: `Error executing Python script: ${errorData.trim()}`
+      });
+    }
+  });
+}
+
+/*
 function runPythonScript(repositoryName: string, baseUrl: string) {
   const workspaceFolders = vscode.workspace.workspaceFolders;
   if (!workspaceFolders || workspaceFolders.length === 0) {
@@ -247,7 +301,7 @@ function runPythonScript(repositoryName: string, baseUrl: string) {
     });
   });
 }
-
+*/
 function runPythonScriptBranch(repositoryName: string, baseUrl: string) {
   const workspaceFolders = vscode.workspace.workspaceFolders;
   if (!workspaceFolders || workspaceFolders.length === 0) {
@@ -290,10 +344,60 @@ function runCommitScript(fileName: string, commitMessage: string, baseUrl: strin
   }
 
   const activeFolderPath = path.join(workspaceFolders[0].uri.fsPath, repositoryName);
+  const folderPath = workspaceFolders[0].uri.fsPath;
+  const projectFolderPath = path.dirname(__dirname);
+  const scriptPath = path.resolve(projectFolderPath, 'commit_changes.py');
+
+  console.log("Repository Path:", activeFolderPath);
+
+  // Execute the Python script
+  exec(
+    `python3 ${scriptPath} ${activeFolderPath} ${baseUrl} ${fileName} "${commitMessage}" ${folderPath}`,
+    (error, stdout, stderr) => {
+      // Handle errors
+      if (error) {
+        log(`Error executing Python script: ${error.message}`);
+        currentPanel?.webview.postMessage({
+          command: 'apiResponse',
+          text: `Error executing Python script: ${error.message}`,
+        });
+        return;
+      }
+
+      // Handle Python script standard error output
+      if (stderr) {
+        log(`Python stderr: ${stderr}`);
+        currentPanel?.webview.postMessage({
+          command: 'apiResponse',
+          text: `${stderr}`,
+        });
+        return;
+      }
+
+      // Log and display the standard output
+      console.log('Python Script Output:', stdout);
+      currentPanel?.webview.postMessage({
+        command: 'apiResponse',
+        text: `Python Script Output: ${stdout}`,
+      });
+    }
+  );
+}
+
+/*
+function runCommitScript(fileName: string, commitMessage: string, baseUrl: string) {
+  const workspaceFolders = vscode.workspace.workspaceFolders;
+  if (!workspaceFolders || workspaceFolders.length === 0) {
+    log('No workspace folder is open.');
+    return;
+  }
+
+  const activeFolderPath = path.join(workspaceFolders[0].uri.fsPath, repositoryName);
+  const folderPath = workspaceFolders[0].uri.fsPath;
   const projectFolderPath = path.dirname(__dirname);
   const scriptPath = path.resolve(projectFolderPath, 'commit_changes.py');
   console.log("respo name",activeFolderPath)
-  exec(`python3 ${scriptPath} ${activeFolderPath} ${baseUrlPath} ${fileName} "${commitMessage}"`, (error, stdout, stderr) => {
+  exec(`python3 ${scriptPath} ${activeFolderPath} ${baseUrlPath} ${fileName} "${commitMessage}" ${folderPath}`, (error, stdout, stderr) => {
     if (error) {
       log(`Error executing Python script: ${error.message}`);
       return;
@@ -312,7 +416,7 @@ function runCommitScript(fileName: string, commitMessage: string, baseUrl: strin
     });
   });
 }
-
+*/
 function runCheckoutScript() {
   const workspaceFolders = vscode.workspace.workspaceFolders;
   if (!workspaceFolders || workspaceFolders.length === 0) {
@@ -321,10 +425,11 @@ function runCheckoutScript() {
   }
 
   const activeFolderPath = path.join(workspaceFolders[0].uri.fsPath, repositoryName);
+  const folderPath = workspaceFolders[0].uri.fsPath;
   const projectFolderPath = path.dirname(__dirname);
   const scriptPath = path.resolve(projectFolderPath, 'checkout_branch.py');
   console.log("respo name",activeFolderPath)
-  exec(`python3 ${scriptPath} ${activeFolderPath} ${baseUrlPath} ${branchName}`, (error, stdout, stderr) => {
+   exec(`python3 ${scriptPath} ${activeFolderPath} ${baseUrlPath} ${branchName} ${folderPath}`, (error, stdout, stderr) => {
     if (error) {
       log(`Error executing Python script: ${error.message}`);
       return;
@@ -356,10 +461,12 @@ function runCheckoutNewScript() {
   }
 
   const activeFolderPath = path.join(workspaceFolders[0].uri.fsPath, repositoryName);
+  const folderPath = workspaceFolders[0].uri.fsPath;
   const projectFolderPath = path.dirname(__dirname);
   const scriptPath = path.resolve(projectFolderPath, 'newcheckout_branch.py');
   console.log("respo name",activeFolderPath)
-  exec(`python3 ${scriptPath} ${activeFolderPath} ${baseUrlPath} ${branchName}`, (error, stdout, stderr) => {
+  exec(`python3 ${scriptPath} ${activeFolderPath} ${baseUrlPath} ${branchName} ${folderPath}`, (error, stdout, stderr) => {
+    console.log({scriptPath}, {activeFolderPath}, {baseUrlPath}, {branchName})
     if (error) {
       log(`Error executing Python script: ${error.message}`);
       return;
@@ -535,7 +642,7 @@ export function activate(context: vscode.ExtensionContext) {
             repositoryName = message.text.trim();
             currentPanel?.webview.postMessage({
               command: 'askFileNameMainframe',
-              text: 'Enter the file name:'
+              text: 'Enter the file name with extension:'
             });
           
           } else if (message.command === 'fileNameMainframe') {
